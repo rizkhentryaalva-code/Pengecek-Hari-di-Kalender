@@ -30,7 +30,7 @@
             margin-top: 15px;
         }
 
-        input {
+        input, select {
             width: 100%;
             padding: 10px;
             margin-top: 5px;
@@ -65,13 +65,14 @@
 <body>
 
 <div class="container">
+
     <h2>Kalender dan Pengecekan Tanggal</h2>
 
     <label>Tanggal</label>
     <input type="number" id="tanggal" placeholder="Masukkan tanggal">
 
     <label>Bulan</label>
-    <select id="bulan" style="width:100%; padding:10px; margin-top:5px;">
+    <select id="bulan">
         <option value="">Pilih Bulan</option>
         <option value="1">Januari</option>
         <option value="2">Februari</option>
@@ -93,10 +94,13 @@
     <button onclick="cekTanggal()">Periksa Tanggal</button>
 
     <div id="hasil"></div>
+
 </div>
 
 <script>
+
 function cekTanggal() {
+
     let tanggal = Number(document.getElementById("tanggal").value);
     let bulan = Number(document.getElementById("bulan").value);
     let tahun = Number(document.getElementById("tahun").value);
@@ -107,7 +111,9 @@ function cekTanggal() {
         !Number.isInteger(tanggal) ||
         !Number.isInteger(bulan) ||
         !Number.isInteger(tahun)) {
+
         alert("Masukkan tanggal, bulan, dan tahun dengan benar!");
+        hasil.style.display = "none";
         return;
     }
 
@@ -122,13 +128,16 @@ function cekTanggal() {
         kabisat = true;
     }
 
-    // Menentukan jumlah hari dalam bulan
+    // Menghitung jumlah hari dalam bulan
     let jumlahHari = 31;
 
     if (bulan == 4 || bulan == 6 ||
         bulan == 9 || bulan == 11) {
+
         jumlahHari = 30;
+
     } else if (bulan == 2) {
+
         if (kabisat) {
             jumlahHari = 29;
         } else {
@@ -136,9 +145,10 @@ function cekTanggal() {
         }
     }
 
-    // Memeriksa validitas tanggal
+    // Memeriksa tanggal
     if (tanggal < 1 || tanggal > jumlahHari) {
         alert("Tanggal tidak valid!");
+        hasil.style.display = "none";
         return;
     }
 
@@ -161,13 +171,46 @@ function cekTanggal() {
         "Rabu", "Kamis", "Jumat", "Sabtu"
     ];
 
-    // Menentukan akhir pekan
-    let akhirPekan = "";
+    // Daftar hari peringatan
+    let peringatan = {
+
+        "1-1": "Tahun Baru Masehi",
+        "10-1": "Hari Gerakan Satu Juta Pohon",
+        "8-3": "Hari Perempuan Internasional",
+        "21-4": "Hari Kartini",
+        "22-4": "Hari Bumi",
+        "1-5": "Hari Buruh Internasional",
+        "2-5": "Hari Pendidikan Nasional",
+        "20-5": "Hari Kebangkitan Nasional",
+        "1-6": "Hari Lahir Pancasila",
+        "5-6": "Hari Lingkungan Hidup Sedunia",
+        "17-8": "Hari Kemerdekaan Republik Indonesia",
+        "1-10": "Hari Kesaktian Pancasila",
+        "2-10": "Hari Batik Nasional",
+        "28-10": "Hari Sumpah Pemuda",
+        "10-11": "Hari Pahlawan",
+        "25-11": "Hari Guru Nasional",
+        "22-12": "Hari Ibu",
+        "25-12": "Hari Natal"
+
+    };
+
+    // Mencari peringatan berdasarkan tanggal
+    let kunci = tanggal + "-" + bulan;
+
+    let namaPeringatan = peringatan[kunci];
+
+    if (namaPeringatan == undefined) {
+        namaPeringatan = "Tidak ada hari peringatan khusus";
+    }
+
+    // Menentukan hari kerja atau akhir pekan
+    let keterangan = "";
 
     if (hari == 0 || hari == 6) {
-        akhirPekan = "Akhir pekan";
+        keterangan = "Akhir pekan";
     } else {
-        akhirPekan = "Hari kerja";
+        keterangan = "Hari kerja";
     }
 
     // Menampilkan hasil
@@ -175,12 +218,27 @@ function cekTanggal() {
 
     hasil.innerHTML = `
         <h3>Hasil Pengecekan</h3>
+
         <p>Hari: <b>${namaHari[hari]}</b></p>
-        <p>Tahun Kabisat: <b>${kabisat ? "Ya" : "Tidak"}</b></p>
-        <p>Jumlah Hari dalam Bulan: <b>${jumlahHari} hari</b></p>
-        <p>Keterangan: <b>${akhirPekan}</b></p>
+
+        <p>Tahun Kabisat:
+        <b>${kabisat ? "Ya" : "Tidak"}</b></p>
+
+        <p>Jumlah Hari dalam Bulan:
+        <b>${jumlahHari} hari</b></p>
+
+        <p>Keterangan:
+        <b>${keterangan}</b></p>
+
+        <hr>
+
+        <h3>Hari Peringatan</h3>
+
+        <p><b>${namaPeringatan}</b></p>
     `;
+
 }
+
 </script>
 
 </body>
